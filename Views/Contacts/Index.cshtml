@@ -1,0 +1,98 @@
+﻿@model ContactGridViewModel
+@{
+    ViewData["Title"] = "Kontakti";
+}
+
+<div class="container mt-4">
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="row m-3">
+        <div class="col">
+            <a href="@Url.Action("Create", "Contacts")" class="btn btn-primary">Novi kontakt</a>
+        </div>
+    </div>
+
+    <div class="row m-3">
+        <div class="col">
+            <input id="searchInput" type="text" class="form-control"
+                   placeholder="Unesite ime,prezime ili email" aria-label="Pretraži" value="@Model.SearchTerm">
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var contact in Model.Contacts)
+        {
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@contact.FirstName @contact.LastName</h5>
+                        <p class="card-text">@contact.Email</p>
+                        <div class="d-flex justify-content-end align-items-center">
+                            <a href="/Contacts/Edit/@contact.Id" class="btn btn-primary m-1">
+                                <i class="fas fa-pencil-alt"></i>  
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@contact.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this contact?');" class="m-1">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>  
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <nav aria-label="Contacts Pagination" class="mt-4">
+        <div class="row mt-4">
+            <div class="col">
+                <nav aria-label="Contacts Pagination">
+                    <ul class="pagination justify-content-start">
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                                <a class="page-link" href="?pageNumber=@i">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+            <div class="col">
+                <span>Ukupan broj rezultata: @Model.TotalItemsNumber</span>
+            </div>
+            <div class="col">
+                <span for="pageSizeDropdown" class="form-label">Ukupan broj prikazanih:</span>
+                 <select id="pageSizeDropdown" class="form-select" onchange="changePageSize()" style="width:20%;display:inline-block">
+                    <option value="6">6</option>
+                    <option value="12">12</option>
+                    <option value="18">18</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('pageSizeDropdown').value = '@(Model.PageSize == 0 ? 6 : Model.PageSize)';
+
+        function changePageSize() {
+            let selectedPageSize = document.getElementById("pageSizeDropdown").value;
+            window.location.href = "/Contacts/Index?pageNumber=@Model.PageNumber&pageSize=" + selectedPageSize;
+        }
+
+        let timeoutId;
+        $('#searchInput').on('input', function () {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(searchContacts, 500);
+        });
+
+        function searchContacts() {
+            let selectedPageSize = document.getElementById("pageSizeDropdown").value;
+            let term = $('#searchInput').val();
+            let pageNumber = @Model.PageNumber;
+            let pageSize = selectedPageSize;
+            window.location.href = "/Contacts/Search?term=" + term + "&pageNumber=" + pageNumber + "&pageSize=" + pageSize;
+        }
+    </script>
+}

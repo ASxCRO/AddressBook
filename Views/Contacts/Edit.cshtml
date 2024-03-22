@@ -1,0 +1,32 @@
+﻿@using AddressBook.Data.Entities
+@model Contact
+
+@{
+    ViewData["Title"] = "Edit Contact";
+}
+
+<div class="container mt-4">
+    <h1>@ViewData["Title"]</h1>
+
+    <form asp-action="Edit" method="post" class="mt-4">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label for="FirstName" class="form-label">Ime *</label>
+            <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="LastName" class="form-label">Prezime *</label>
+            <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="Email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" >
+        </div>
+
+        <button type="submit" class="btn btn-primary">Spremi</button>
+        <a href="@Url.Action("Index", "Contacts")" class="btn btn-secondary">Odustani</a>
+    </form>
+</div>
