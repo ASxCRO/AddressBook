@@ -1,6 +1,6 @@
 ﻿@model ContactGridViewModel
 @{
-    ViewData["Title"] = "Kontakti";
+    ViewData["Title"] = @Localizer.Getkey("CONTACTS");
 }
 
 <div class="container mt-4">
@@ -8,14 +8,26 @@
 
     <div class="row m-3">
         <div class="col">
-            <a href="@Url.Action("Create", "Contacts")" class="btn btn-primary">Novi kontakt</a>
+            <a href="@Url.Action("Create", "Contacts")" class="btn btn-primary">@Localizer.Getkey("NEW_CONTACT")</a>
         </div>
     </div>
 
     <div class="row m-3">
         <div class="col">
+            <label for="searchInputLabel" class="form-label">@Localizer.Getkey("FILTER_BY"):</label>
             <input id="searchInput" type="text" class="form-control"
-                   placeholder="Unesite ime,prezime ili email" aria-label="Pretraži" value="@Model.SearchTerm">
+                   placeholder="@Localizer.Getkey("INSERT_NAME_SURNAME_OR_EMAIL")" aria-label="@Localizer.Getkey("SEARCH")" value="@Model.SearchTerm">
+        </div>
+        <div class="col">
+            <label for="sortDropdownLabel" class="form-label">@Localizer.Getkey("SORT_BY"):</label>
+            <select id="sortDropdown" class="form-select" onchange="refreshSearch()" value="@Model.Sort">
+                <option value="FirstNameAsc">@Localizer.Getkey("FIRST_NAME") @Localizer.Getkey("ASCENDING")</option>
+                <option value="FirstNameDesc">@Localizer.Getkey("FIRST_NAME") @Localizer.Getkey("DESCENDING")</option>
+                <option value="LastNameAsc">@Localizer.Getkey("LAST_NAME") @Localizer.Getkey("ASCENDING")</option>
+                <option value="LastNameDesc">@Localizer.Getkey("LAST_NAME") @Localizer.Getkey("DESCENDING")</option>
+                <option value="EmailAsc">@Localizer.Getkey("EMAIL") @Localizer.Getkey("ASCENDING")</option>
+                <option value="EmailDesc">@Localizer.Getkey("EMAIL") @Localizer.Getkey("DESCENDING")</option>
+            </select>
         </div>
     </div>
 
@@ -31,7 +43,7 @@
                             <a href="/Contacts/Edit/@contact.Id" class="btn btn-primary m-1">
                                 <i class="fas fa-pencil-alt"></i>  
                             </a>
-                            <form asp-action="Delete" asp-route-id="@contact.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this contact?');" class="m-1">
+                            <form asp-action="Delete" asp-route-id="@contact.Id" method="post" onsubmit="return confirm('@Localizer.Getkey("ARE_YOU_SURE_TO_DELETE_THIS_CONTACT")');" class="m-1">
                                 <button type="submit" class="btn btn-danger">
                                     <i class="fas fa-trash"></i>  
                                 </button>
@@ -51,18 +63,18 @@
                         @for (int i = 1; i <= Model.TotalPages; i++)
                         {
                             <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                                <a class="page-link" href="?pageNumber=@i">@i</a>
+                                <a class="page-link" href="?pageNumber=@i&pageSize=@Model.PageSize">@i</a>
                             </li>
                         }
                     </ul>
                 </nav>
             </div>
             <div class="col">
-                <span>Ukupan broj rezultata: @Model.TotalItemsNumber</span>
+                <span>@Localizer.Getkey("TOTAL_RESULTS_NUMBER"): @Model.TotalItemsNumber</span>
             </div>
             <div class="col">
-                <span for="pageSizeDropdown" class="form-label">Ukupan broj prikazanih:</span>
-                 <select id="pageSizeDropdown" class="form-select" onchange="changePageSize()" style="width:20%;display:inline-block">
+                <span for="pageSizeDropdown" class="form-label">@Localizer.Getkey("TOTAL_SHOWN_NUMBER"):</span>
+                <select id="pageSizeDropdown" class="form-select" onchange="refreshSearch()" style="width:20%;display:inline-block" value="@Model.PageSize">
                     <option value="6">6</option>
                     <option value="12">12</option>
                     <option value="18">18</option>
@@ -75,24 +87,30 @@
 @section Scripts {
     <script>
         document.getElementById('pageSizeDropdown').value = '@(Model.PageSize == 0 ? 6 : Model.PageSize)';
-
-        function changePageSize() {
-            let selectedPageSize = document.getElementById("pageSizeDropdown").value;
-            window.location.href = "/Contacts/Index?pageNumber=@Model.PageNumber&pageSize=" + selectedPageSize;
-        }
+        document.getElementById('sortDropdown').value = '@(Model.Sort == "" ? "FirstNameAsc" : Model.Sort)';
+        document.getElementById('searchInput').value = '@(Model.SearchTerm)';
 
         let timeoutId;
         $('#searchInput').on('input', function () {
             clearTimeout(timeoutId);
-            timeoutId = setTimeout(searchContacts, 500);
+            timeoutId = setTimeout(refreshSearch, 500);
         });
 
-        function searchContacts() {
-            let selectedPageSize = document.getElementById("pageSizeDropdown").value;
-            let term = $('#searchInput').val();
+        function refreshSearch() {
+            let pageSize = document.getElementById("pageSizeDropdown").value;
             let pageNumber = @Model.PageNumber;
-            let pageSize = selectedPageSize;
-            window.location.href = "/Contacts/Search?term=" + term + "&pageNumber=" + pageNumber + "&pageSize=" + pageSize;
+            let sort = document.getElementById("sortDropdown").value;
+            let term = $('#searchInput').val();
+
+            window.location.href = "/Contacts/Index?term=" + term + "&pageNumber=" + pageNumber + "&pageSize=" + pageSize + "&sortField=" + sort;
         }
+
+        $(document).ready(function () {
+            // Check if TempData contains a success message
+            if ('@TempData["SuccessMessage"]' !== '') {
+                toastr.success('@TempData["SuccessMessage"]');
+            }
+        });
+
     </script>
 }

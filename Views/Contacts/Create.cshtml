@@ -1,7 +1,8 @@
-﻿@using AddressBook.Data.Entities
+﻿@using AddressBook.Controllers
+@using AddressBook.Data.Entities
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
 @model Contact
-@inject IViewLocalizer Localizer
 @{
     ViewData["Title"] = "Unesi novi kontakt";
 }
@@ -11,21 +12,21 @@
 
     <form asp-action="Create" method="post" class="mt-4">
         <div class="mb-3">
-            <label for="FirstName" class="form-label">@Localizer["FIRST_NAME"] *</label>
+            <label for="FirstName" class="form-label">@Localizer.Getkey("FIRST_NAME") *</label>
             <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required>
         </div>
 
         <div class="mb-3">
-            <label for="LastName" class="form-label">@Localizer["LAST_NAME"] *</label>
+            <label for="LastName" class="form-label">@Localizer.Getkey("LAST_NAME") *</label>
             <input type="text" class="form-control" id="LastName" name="LastName" value="@Model.LastName" required>
         </div>
 
         <div class="mb-3">
-            <label for="Email" class="form-label">Email</label>
+            <label for="Email" class="form-label">@Localizer.Getkey("EMAIL")</label>
             <input type="email" class="form-control" id="Email" name="Email" value="@Model.Email" >
         </div>
 
-        <button type="submit" class="btn btn-primary">Spremi</button>
-        <a href="@Url.Action("Index", "Contacts")" class="btn btn-secondary">Odustani</a>
+        <button type="submit" class="btn btn-primary">@Localizer.Getkey("SAVE")</button>
+        <a href="@Url.Action("Index", "Contacts")" class="btn btn-secondary">@Localizer.Getkey("CANCEL")</a>
     </form>
 </div>

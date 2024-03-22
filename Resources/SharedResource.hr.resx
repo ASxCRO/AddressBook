@@ -117,10 +117,64 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ARE_YOU_SURE_TO_DELETE_THIS_CONTACT" xml:space="preserve">
+    <value>Jeste li sigurni da želite obrisati ovaj kontakt?</value>
+  </data>
+  <data name="ASCENDING" xml:space="preserve">
+    <value>uzlazno</value>
+  </data>
+  <data name="CANCEL" xml:space="preserve">
+    <value>Odustani</value>
+  </data>
+  <data name="CONTACTS" xml:space="preserve">
+    <value>Kontakti</value>
+  </data>
+  <data name="DESCENDING" xml:space="preserve">
+    <value>silazno</value>
+  </data>
+  <data name="EMAIL" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="ERROR" xml:space="preserve">
+    <value>Greška</value>
+  </data>
+  <data name="FILTER_BY" xml:space="preserve">
+    <value>Filtriranje</value>
+  </data>
   <data name="FIRST_NAME" xml:space="preserve">
     <value>Ime</value>
   </data>
+  <data name="INSERT_NAME_SURNAME_OR_EMAIL" xml:space="preserve">
+    <value>Unesite ime, prezime ili email</value>
+  </data>
   <data name="LAST_NAME" xml:space="preserve">
     <value>Prezime</value>
+  </data>
+  <data name="NEW_CONTACT" xml:space="preserve">
+    <value>Novi kontakt</value>
+  </data>
+  <data name="SAVE" xml:space="preserve">
+    <value>Spremi</value>
+  </data>
+  <data name="SEARCH" xml:space="preserve">
+    <value>Pretraži</value>
+  </data>
+  <data name="SORT_BY" xml:space="preserve">
+    <value>Sortiranje</value>
+  </data>
+  <data name="SUCCESS_ADDED_CONTACT" xml:space="preserve">
+    <value>Uspješno dodan kontakt</value>
+  </data>
+  <data name="SUCCESS_DELETED_CONTACT" xml:space="preserve">
+    <value>Uspješno izbrisan kontakt</value>
+  </data>
+  <data name="SUCCESS_EDITED_CONTACT" xml:space="preserve">
+    <value>Uspješno ažuriran kontakt</value>
+  </data>
+  <data name="TOTAL_RESULTS_NUMBER" xml:space="preserve">
+    <value>Ukupan broj rezultata</value>
+  </data>
+  <data name="TOTAL_SHOWN_NUMBER" xml:space="preserve">
+    <value>Ukupan broj prikazanih</value>
   </data>
 </root>

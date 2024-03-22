@@ -1,6 +1,7 @@
 ﻿using AddressBook.Data.Entities;
 using AddressBook.Data.Repositories.Abstraction;
 using Dapper;
+using System.Drawing;
 
 namespace AddressBook.Data.Repositories.Implementation
 {
@@ -29,11 +30,27 @@ namespace AddressBook.Data.Repositories.Implementation
             }
         }
 
-        public IEnumerable<Contact> FindAll(int pageNumber, int pageSize)
+        public IEnumerable<Contact> FindAll(int pageNumber, int pageSize, string sortField, string term)
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                return connection.Query<Contact>("SELECT * FROM Contacts ORDER BY ID OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY", new { offset = (pageNumber - 1) * pageSize, pageSize });
+                string order = sortField switch
+                {
+                    "FirstNameAsc" => "FirstName asc",
+                    "FirstNameDesc" => "FirstName desc",
+                    "LastNameAsc" => "LastName asc",
+                    "LastNameDesc" => "LastName desc",
+                    "EmailAsc" => "Email asc",
+                    "EmailDesc" => "Email desc",
+                    _ => "ID"
+                };
+
+                var where = "WHERE FirstName LIKE @term OR LastName LIKE @term OR Email LIKE @term";
+                where = !string.IsNullOrWhiteSpace(term) ? where : string.Empty;
+
+                var query = $"SELECT * FROM Contacts {where} ORDER BY {order} OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY";
+
+                return connection.Query<Contact>(query, new { term = $"%{term}%", offset = (pageNumber - 1) * pageSize, pageSize });
             }
         }
 
@@ -59,14 +76,6 @@ namespace AddressBook.Data.Repositories.Implementation
             {
                 item.ModifiedAt = DateTime.Now;
                 connection.Execute("UPDATE Contacts SET FirstName = @FirstName, Email = @Email, LastName = @LastName, ModifiedAt = @ModifiedAt WHERE ID = @ID", item);
-            }
-        }
-
-        public IEnumerable<Contact> FindAllByTerm (string term, int pageNumber, int pageSize)
-        {
-            using (var connection = _connectionFactory.CreateConnection())
-            {
-                return connection.Query<Contact>("SELECT * FROM Contacts WHERE FirstName LIKE @term OR LastName LIKE @term OR Email LIKE @term ORDER BY ID OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY", new { term = $"%{term}%", offset = (pageNumber - 1) * pageSize, pageSize });
             }
         }
 

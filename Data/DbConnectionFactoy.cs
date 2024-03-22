@@ -7,6 +7,10 @@ namespace AddressBook.Data
     {
         private readonly IConfiguration _configuration;
 
+        public DbConnectionFactory()
+        {
+            
+        }
         public DbConnectionFactory(IConfiguration configuration)
         {
             _configuration = configuration;

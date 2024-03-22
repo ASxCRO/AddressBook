@@ -10,7 +10,7 @@
 
         T FindByID(int id); 
 
-        IEnumerable<T> FindAll(int pageNumber, int pageSize);
+        IEnumerable<T> FindAll(int pageNumber, int pageSize, string sortField, string term);
         int CountAll();
     }
 }
