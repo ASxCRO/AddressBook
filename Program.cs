@@ -1,15 +1,8 @@
 using AddressBook.Data;
-using AddressBook.Data.Entities;
-using AddressBook.Data.Repositories;
 using AddressBook.Data.Repositories.Abstraction;
 using AddressBook.Data.Repositories.Implementation;
 using AddressBook.Localization;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using System.Data;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.Reflection;
 

@@ -14,11 +14,14 @@ namespace AddressBook.Data.Repositories.Implementation
             _connectionFactory = connectionFactory;
         }
 
-        public void Add(Contact item)
+        public int Add(Contact item)
         {
             using (var connection = _connectionFactory.CreateConnection())
             {
-                connection.Execute("INSERT INTO Contacts (FirstName, Email, LastName) VALUES (@FirstName, @Email, @LastName)", item);
+                return connection.QuerySingle<int>(
+                    "INSERT INTO Contacts (FirstName, Email, LastName) VALUES (@FirstName, @Email, @LastName); SELECT SCOPE_IDENTITY()",
+                    item
+                );
             }
         }
 

@@ -132,6 +132,9 @@
   <data name="DESCENDING" xml:space="preserve">
     <value>silazno</value>
   </data>
+  <data name="EDIT_CONTACT" xml:space="preserve">
+    <value>Uredi kontakt</value>
+  </data>
   <data name="EMAIL" xml:space="preserve">
     <value>Email</value>
   </data>

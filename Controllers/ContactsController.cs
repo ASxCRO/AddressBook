@@ -43,12 +43,12 @@ namespace AddressBook.Controllers
             var contactGridViewModel = new ContactGridViewModel
             {
                 PageNumber = pageNumber,
-                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
-                Contacts = _contactsRepository.FindAll(pageNumber, pageSize, sortField, term),
-                TotalItemsNumber = totalCount,
                 PageSize = pageSize,
+                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
                 Sort = sortField,
-                SearchTerm = term
+                SearchTerm = term,
+                TotalItemsNumber = totalCount,
+                Contacts = _contactsRepository.FindAll(pageNumber, pageSize, sortField, term)
             };
             
             return View("Index", contactGridViewModel);
@@ -62,46 +62,46 @@ namespace AddressBook.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Contact partner)
+        public IActionResult Create(Contact contact)
         {
             if (ModelState.IsValid)
             {
-                _contactsRepository.Add(partner);
+                var id = _contactsRepository.Add(contact);
                 TempData["SuccessMessage"] = _languageService.Getkey("SUCCESS_ADDED_CONTACT").Value;
-                return RedirectToAction("Index");
+                return RedirectToAction("Edit", new { id });
             }
-            return View(partner);
+            return View(contact);
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var partner = _contactsRepository.FindByID(id);
-            if (partner == null)
+            var contact = _contactsRepository.FindByID(id);
+            if (contact == null)
                 return RedirectToAction("Index", "Error");
-            return View("Edit", partner);
+            return View("Edit", contact);
         }
 
         [HttpPut]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Contact partner)
+        public IActionResult Edit(Contact contact)
         {
             if (ModelState.IsValid)
             {
-                _contactsRepository.Update(partner);
+                _contactsRepository.Update(contact);
                 TempData["SuccessMessage"] = _languageService.Getkey("SUCCESS_EDITED_CONTACT").Value;
                 return RedirectToAction("Index");
             }
-            return View(partner);
+            return View(contact);
         }
 
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var partner = _contactsRepository.FindByID(id);
-            if (partner == null)
+            var contact = _contactsRepository.FindByID(id);
+            if (contact == null)
                 return RedirectToAction("Index", "Error");
-            return View("Delete", partner);
+            return View("Delete", contact);
         }
 
         [HttpDelete]

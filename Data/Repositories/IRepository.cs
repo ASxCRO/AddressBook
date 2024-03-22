@@ -2,7 +2,7 @@
 {
     public interface IRepository<T> where T : class
     {
-        void Add(T item);
+        int Add(T item);
 
         void Remove(int id);
 
