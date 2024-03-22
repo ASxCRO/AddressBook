@@ -106,7 +106,6 @@
         }
 
         $(document).ready(function () {
-            // Check if TempData contains a success message
             if ('@TempData["SuccessMessage"]' !== '') {
                 toastr.success('@TempData["SuccessMessage"]');
             }

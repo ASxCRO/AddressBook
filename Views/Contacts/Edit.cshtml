@@ -28,3 +28,13 @@
         <a href="@Url.Action("Index", "Contacts")" class="btn btn-secondary">@Localizer.Getkey("CANCEL")</a>
     </form>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            if ('@TempData["SuccessMessage"]' !== '') {
+                toastr.success('@TempData["SuccessMessage"]');
+            }
+        });
+    </script>
+}
