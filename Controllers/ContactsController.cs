@@ -22,23 +22,11 @@ namespace AddressBook.Controllers
         {
             int totalCount = 0;
 
-            if(string.IsNullOrWhiteSpace(term))
-            {
-                totalCount = _contactsRepository.CountAll();
-            }
-            else
-            {
-                totalCount = _contactsRepository.CountByTerm(term);
-            }
+            if(string.IsNullOrWhiteSpace(term)) totalCount = _contactsRepository.CountAll();
+            else totalCount = _contactsRepository.CountByTerm(term);
 
-            if (totalCount < ((pageSize * (pageNumber - 1))))
-            {
-                pageNumber = 1;
-            }
-            else if (pageNumber > (int)Math.Ceiling((double)totalCount / pageSize))
-            {
-                pageNumber = 1;
-            }
+            if (totalCount < ((pageSize * (pageNumber - 1))))  pageNumber = 1;
+            else if (pageNumber > (int)Math.Ceiling((double)totalCount / pageSize)) pageNumber = 1;
 
             var contactGridViewModel = new ContactGridViewModel
             {
