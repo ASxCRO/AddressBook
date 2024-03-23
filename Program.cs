@@ -2,6 +2,7 @@ using AddressBook.Data;
 using AddressBook.Data.Repositories.Abstraction;
 using AddressBook.Data.Repositories.Implementation;
 using AddressBook.Localization;
+using AddressBook.Utils;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using System.Reflection;
@@ -40,7 +41,6 @@ namespace AddressBook
 
             if (!app.Environment.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
 
@@ -50,6 +50,8 @@ namespace AddressBook
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //app.UseGlobalExceptionHandler();
 
             var supportedCultures = new[]
             {

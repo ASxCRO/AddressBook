@@ -20,7 +20,7 @@
         </div>
         <div class="col">
             <label for="sortDropdownLabel" class="form-label">@Localizer.Getkey("SORT_BY"):</label>
-            <select id="sortDropdown" class="form-select" onchange="refreshSearch()" value="@Model.Sort">
+            <select id="sortDropdown" class="form-select" onchange="refreshSearch()">
                 <option value="FirstNameAsc">@Localizer.Getkey("FIRST_NAME") @Localizer.Getkey("ASCENDING")</option>
                 <option value="FirstNameDesc">@Localizer.Getkey("FIRST_NAME") @Localizer.Getkey("DESCENDING")</option>
                 <option value="LastNameAsc">@Localizer.Getkey("LAST_NAME") @Localizer.Getkey("ASCENDING")</option>
@@ -43,7 +43,8 @@
                             <a href="/Contacts/Edit/@contact.Id" class="btn btn-primary m-1">
                                 <i class="fas fa-pencil-alt"></i>  
                             </a>
-                            <form asp-action="Delete" asp-route-id="@contact.Id" method="post" onsubmit="return confirm('@Localizer.Getkey("ARE_YOU_SURE_TO_DELETE_THIS_CONTACT")');" class="m-1">
+                            <form id="deleteForm" asp-action="Delete" asp-route-id="@contact.Id" method="post" class="m-1">
+                                @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-danger">
                                     <i class="fas fa-trash"></i>  
                                 </button>
@@ -63,7 +64,7 @@
                         @for (int i = 1; i <= Model.TotalPages; i++)
                         {
                             <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                                <a class="page-link" href="?pageNumber=@i&pageSize=@Model.PageSize">@i</a>
+                                <a class="page-link" href="?pageNumber=@i&pageSize=@Model.PageSize&term=@Model.SearchTerm&sortField=@Model.Sort">@i</a>
                             </li>
                         }
                     </ul>
@@ -86,21 +87,12 @@
 
 @section Scripts {
     <script>
-        document.getElementById('pageSizeDropdown').value = '@(Model.PageSize == 0 ? 6 : Model.PageSize)';
-        document.getElementById('sortDropdown').value = '@(Model.Sort == "" ? "FirstNameAsc" : Model.Sort)';
-        document.getElementById('searchInput').value = '@(Model.SearchTerm)';
-
-        let timeoutId;
-        $('#searchInput').on('input', function () {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(refreshSearch, 500);
-        });
-
+        
         function refreshSearch() {
             let pageSize = document.getElementById("pageSizeDropdown").value;
             let pageNumber = @Model.PageNumber;
             let sort = document.getElementById("sortDropdown").value;
-            let term = $('#searchInput').val();
+            let term = document.getElementById("searchInput").value;
 
             window.location.href = "/Contacts/Index?term=" + term + "&pageNumber=" + pageNumber + "&pageSize=" + pageSize + "&sortField=" + sort;
         }
@@ -109,7 +101,26 @@
             if ('@TempData["SuccessMessage"]' !== '') {
                 toastr.success('@TempData["SuccessMessage"]');
             }
-        });
 
+            document.getElementById('pageSizeDropdown').value = '@(Model.PageSize == 0 ? 6 : Model.PageSize)';
+            document.getElementById('sortDropdown').value = '@(string.IsNullOrWhiteSpace(Model.Sort) ? "FirstNameAsc" : Model.Sort)';
+            document.getElementById('searchInput').value = '@(Model.SearchTerm)';
+
+            let timeoutId;
+            $('#searchInput').on('input', function () {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(refreshSearch, 500);
+            });
+
+            document.getElementById('deleteForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                var confirmed = confirm('@Localizer.Getkey("ARE_YOU_SURE_TO_DELETE_THIS_CONTACT")');
+
+                if (confirmed) {
+                    this.submit();
+                }
+            });
+        });
     </script>
 }

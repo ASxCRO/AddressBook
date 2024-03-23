@@ -3,6 +3,7 @@ using AddressBook.Data.Repositories.Abstraction;
 using AddressBook.Localization;
 using AddressBook.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace AddressBook.Controllers
 {
@@ -22,23 +23,27 @@ namespace AddressBook.Controllers
         {
             int totalCount = 0;
 
-            if(string.IsNullOrWhiteSpace(term)) totalCount = _contactsRepository.CountAll();
+            if (string.IsNullOrWhiteSpace(term)) totalCount = _contactsRepository.CountAll();
             else totalCount = _contactsRepository.CountByTerm(term);
 
-            if (totalCount < ((pageSize * (pageNumber - 1))))  pageNumber = 1;
-            else if (pageNumber > (int)Math.Ceiling((double)totalCount / pageSize)) pageNumber = 1;
+            int totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            if (pageNumber > totalPages) pageNumber = 1;
 
             var contactGridViewModel = new ContactGridViewModel
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
-                TotalPages = (int)Math.Ceiling((double)totalCount / pageSize),
+                TotalPages = totalPages,
                 Sort = sortField,
                 SearchTerm = term,
                 TotalItemsNumber = totalCount,
                 Contacts = _contactsRepository.FindAll(pageNumber, pageSize, sortField, term)
             };
+
             
+            TempData["ContactGridPager"] = JsonSerializer.Serialize(contactGridViewModel);
+
             return View("Index", contactGridViewModel);
         }
 
@@ -78,28 +83,37 @@ namespace AddressBook.Controllers
             {
                 _contactsRepository.Update(contact);
                 TempData["SuccessMessage"] = _languageService.Getkey("SUCCESS_EDITED_CONTACT").Value;
-                return RedirectToAction("Index");
+
+                var contactGridPager = JsonSerializer.Deserialize<ContactGridViewModel>(TempData["ContactGridPager"].ToString());
+
+                return RedirectToAction("Index", new
+                {
+                    term = contactGridPager.SearchTerm,
+                    sortField = contactGridPager.Sort,
+                    pageNumber = contactGridPager.PageNumber,
+                    pageSize = contactGridPager.PageSize,
+                });
             }
+
             return View(contact);
         }
 
-        [HttpGet]
-        public IActionResult Delete(int id)
-        {
-            var contact = _contactsRepository.FindByID(id);
-            if (contact == null)
-                return RedirectToAction("Index", "Error");
-            return View("Delete", contact);
-        }
-
-        [HttpDelete]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
             _contactsRepository.Remove(id);
             TempData["SuccessMessage"] = _languageService.Getkey("SUCCESS_DELETED_CONTACT").Value;
-            return RedirectToAction("Index");
+
+            var contactGridPager = JsonSerializer.Deserialize<ContactGridViewModel>(TempData["ContactGridPager"].ToString());
+
+            return RedirectToAction("Index", new {
+                term = contactGridPager.SearchTerm,
+                sortField = contactGridPager.Sort,
+                pageNumber = contactGridPager.PageNumber,
+                pageSize = contactGridPager.PageSize,
+            });
         }
     }
 }

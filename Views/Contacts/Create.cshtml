@@ -7,6 +7,7 @@
     <h1>@ViewData["Title"]</h1>
 
     <form asp-action="Create" method="post" class="mt-4" id="createForm">
+        @Html.AntiForgeryToken()
         <div class="mb-3">
             <label for="FirstName" class="form-label">@Localizer.Getkey("FIRST_NAME") *</label>
             <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required>
