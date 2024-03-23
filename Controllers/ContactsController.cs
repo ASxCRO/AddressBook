@@ -21,7 +21,7 @@ namespace AddressBook.Controllers
         [HttpGet]
         public IActionResult Index(string term = "", int pageNumber = 1, int pageSize = 12, string sortField = "FirstNameAsc")
         {
-            int totalCount = 0;
+            int totalCount;
 
             if (string.IsNullOrWhiteSpace(term)) totalCount = _contactsRepository.CountAll();
             else totalCount = _contactsRepository.CountByTerm(term);
