@@ -6,13 +6,15 @@
 <div class="container mt-4">
     <h1>@ViewData["Title"]</h1>
 
-    <div class="row m-3">
-        <div class="col">
-            <a href="@Url.Action("Create", "Contacts")" class="btn btn-primary">@Localizer.Getkey("NEW_CONTACT")</a>
+    <div class="row mt-3">
+        <div class="d-flex justify-content-end">
+            <a href="@Url.Action("Create", "Contacts")" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i>
+            </a>
         </div>
     </div>
 
-    <div class="row m-3">
+    <div class="row mt-3">
         <div class="col">
             <label for="searchInputLabel" class="form-label">@Localizer.Getkey("FILTER_BY"):</label>
             <input id="searchInput" type="text" class="form-control"
@@ -31,12 +33,12 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-3">
         @foreach (var contact in Model.Contacts)
         {
             <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
+                <div class="card h-100">
+                    <div class="card-body h-100 d-flex flex-column justify-content-between align-items-center">
                         <h5 class="card-title">@contact.FirstName @contact.LastName</h5>
                         <p class="card-text">@contact.Email</p>
                         <div class="d-flex justify-content-end align-items-center">
@@ -97,6 +99,16 @@
             window.location.href = "/Contacts/Index?term=" + term + "&pageNumber=" + pageNumber + "&pageSize=" + pageSize + "&sortField=" + sort;
         }
 
+        document.getElementById('deleteForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var confirmed = confirm('@Localizer.Getkey("ARE_YOU_SURE_TO_DELETE_THIS_CONTACT")');
+
+            if (confirmed) {
+                this.submit();
+            }
+        });
+
         $(document).ready(function () {
             if ('@TempData["SuccessMessage"]' !== '') {
                 toastr.success('@TempData["SuccessMessage"]');
@@ -112,15 +124,7 @@
                 timeoutId = setTimeout(refreshSearch, 500);
             });
 
-            document.getElementById('deleteForm').addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                var confirmed = confirm('@Localizer.Getkey("ARE_YOU_SURE_TO_DELETE_THIS_CONTACT")');
-
-                if (confirmed) {
-                    this.submit();
-                }
-            });
+            
         });
     </script>
 }
