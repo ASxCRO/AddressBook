@@ -70,7 +70,7 @@ namespace AddressBook.Controllers
             return View("Edit", contact);
         }
 
-        [HttpPut]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Contact contact)
         {

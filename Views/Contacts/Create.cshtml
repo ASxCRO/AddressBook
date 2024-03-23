@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <h1>@ViewData["Title"]</h1>
 
-    <form asp-action="Create" method="post" class="mt-4">
+    <form asp-action="Create" method="post" class="mt-4" id="createForm">
         <div class="mb-3">
             <label for="FirstName" class="form-label">@Localizer.Getkey("FIRST_NAME") *</label>
             <input type="text" class="form-control" id="FirstName" name="FirstName" value="@Model.FirstName" required>
@@ -26,3 +26,31 @@
         <a href="@Url.Action("Index", "Contacts")" class="btn btn-secondary">@Localizer.Getkey("CANCEL")</a>
     </form>
 </div>
+
+@section Scripts{
+    <script>
+        document.getElementById('createForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var firstName = document.getElementById('FirstName').value;
+            var lastname = document.getElementById('LastName').value;
+            var email = document.getElementById('Email').value;
+
+            if (!validator.isLength(firstName, { min: 2, max: 50 })) {
+                alert('@Localizer.Getkey("FIRST_NAME_MUST_BE_BETWEEN_2_50_LONG")');
+                return;
+            }
+
+            if (!validator.isLength(lastname, { min: 2, max: 100 })) {
+                alert('@Localizer.Getkey("LAST_NAME_MUST_BE_BETWEEN_2_100_LONG")');
+                return;
+            }
+
+            if (email.lenght > 0 && !validator.isEmail(email)) {
+                alert('@Localizer.Getkey("INVALID_EMAIL")');
+                return;
+            }
+
+            this.submit();
+        });
+    </script>
+}

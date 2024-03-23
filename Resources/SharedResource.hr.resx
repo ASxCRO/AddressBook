@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ADDRESS_BOOK" xml:space="preserve">
+    <value>Adresar</value>
+  </data>
   <data name="ARE_YOU_SURE_TO_DELETE_THIS_CONTACT" xml:space="preserve">
     <value>Jeste li sigurni da želite obrisati ovaj kontakt?</value>
   </data>
@@ -147,11 +150,20 @@
   <data name="FIRST_NAME" xml:space="preserve">
     <value>Ime</value>
   </data>
+  <data name="FIRST_NAME_MUST_BE_BETWEEN_2_50_LONG" xml:space="preserve">
+    <value>Ime mora biti dugacko od 2 do 50 znakova</value>
+  </data>
   <data name="INSERT_NAME_SURNAME_OR_EMAIL" xml:space="preserve">
     <value>Unesite ime, prezime ili email</value>
   </data>
+  <data name="INVALID_EMAIL" xml:space="preserve">
+    <value>Neispravna email adresa</value>
+  </data>
   <data name="LAST_NAME" xml:space="preserve">
     <value>Prezime</value>
+  </data>
+  <data name="LAST_NAME_MUST_BE_BETWEEN_2_100_LONG" xml:space="preserve">
+    <value>Prezime mora biti dugacko od 2 do 100 znakova</value>
   </data>
   <data name="NEW_CONTACT" xml:space="preserve">
     <value>Novi kontakt</value>

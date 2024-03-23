@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <h1>@ViewData["Title"]</h1>
 
-    <form asp-action="Edit" method="post" class="mt-4">
+    <form asp-action="Edit" method="post" class="mt-4" id="editForm">
         <input type="hidden" asp-for="Id" />
 
         <div class="mb-3">
@@ -35,6 +35,32 @@
             if ('@TempData["SuccessMessage"]' !== '') {
                 toastr.success('@TempData["SuccessMessage"]');
             }
+
+            document.getElementById('editForm').addEventListener('submit', function (event) {
+                event.preventDefault();
+                var firstName = document.getElementById('FirstName').value;
+                var lastname = document.getElementById('LastName').value;
+                var email = document.getElementById('Email').value;
+
+                if (!validator.isLength(firstName, { min: 2, max: 50 })) {
+                    alert('@Localizer.Getkey("FIRST_NAME_MUST_BE_BETWEEN_2_50_LONG")');
+                    return;
+                }
+
+                if (!validator.isLength(lastname, { min: 2, max: 100 })) {
+                    alert('@Localizer.Getkey("LAST_NAME_MUST_BE_BETWEEN_2_100_LONG")');
+                    return;
+                }
+
+                if (email.lenght > 0 && !validator.isEmail(email)) {
+                    alert('@Localizer.Getkey("INVALID_EMAIL")');
+                    return;
+                }
+
+                this.submit();
+            });
         });
+
+       
     </script>
 }
